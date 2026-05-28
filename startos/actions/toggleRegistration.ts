@@ -33,9 +33,7 @@ export const toggleRegistration = sdk.Action.withoutInput(
   },
 
   async ({ effects }) => {
-    const enabled = await configJson
-      .read((c) => c.registrationEnabled)
-      .const(effects)
+    const enabled = await configJson.read((c) => c.registrationEnabled).once()
 
     await configJson.merge(effects, { registrationEnabled: !enabled })
   },

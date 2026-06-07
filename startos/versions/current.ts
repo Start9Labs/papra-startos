@@ -1,13 +1,13 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '26.4.2:1',
+  version: '26.5.0:0',
   releaseNotes: {
-    en_US: 'Initial release of Papra for StartOS.',
-    es_ES: 'Lanzamiento inicial de Papra para StartOS.',
-    de_DE: 'Erste Veröffentlichung von Papra für StartOS.',
-    pl_PL: 'Pierwsze wydanie Papra dla StartOS.',
-    fr_FR: 'Première version de Papra pour StartOS.',
+    en_US: 'Updates Papra to 26.5.0.',
+    es_ES: 'Actualiza Papra a 26.5.0.',
+    de_DE: 'Aktualisiert Papra auf 26.5.0.',
+    pl_PL: 'Aktualizuje Papra do 26.5.0.',
+    fr_FR: 'Met à jour Papra vers 26.5.0.',
   },
   migrations: {
     up: async ({ effects }) => {},

@@ -71,7 +71,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     })
   }
 
-  const appSub = await sdk.SubContainer.of(
+  const appSub = sdk.SubContainer.of(
     effects,
     { imageId: 'main' },
     sdk.Mounts.of().mountVolume({

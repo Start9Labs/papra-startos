@@ -7,7 +7,7 @@
 ## What you get on StartOS
 
 - A self-hosted **web interface** at the Papra **Web UI** interface, where you upload, organize, tag, and full-text-search your documents.
-- Documents and their database live entirely on your server's `main` volume and are included in StartOS backups.
+- Documents and their database live entirely on your server's `main` volume and are included in StartOS backups. Uninstalling Papra permanently deletes them, so export anything you want to keep — or take a backup — first.
 - A generated authentication secret and sensible defaults so Papra is ready to use the moment it starts — no upstream setup wizard.
 
 ## Getting set up

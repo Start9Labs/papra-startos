@@ -18,16 +18,3 @@ export const long = {
   fr_FR:
     "Papra est une plateforme légère et open source de gestion de documents. Stockez, organisez et retrouvez vos documents grâce à la recherche en texte intégral, aux étiquettes et à l'extraction automatique de texte (OCR) des fichiers numérisés. Organisez les documents en organisations, importez-les par e-mail ou dossier surveillé, et gardez tout auto-hébergé sur votre propre serveur.",
 }
-
-export const alertUninstall = {
-  en_US:
-    'Uninstalling Papra will permanently delete all of your documents and their metadata. Make sure to export anything you want to keep first.',
-  es_ES:
-    'Desinstalar Papra eliminará permanentemente todos tus documentos y sus metadatos. Asegúrate de exportar primero todo lo que quieras conservar.',
-  de_DE:
-    'Beim Deinstallieren von Papra werden alle Ihre Dokumente und deren Metadaten dauerhaft gelöscht. Exportieren Sie zuerst alles, was Sie behalten möchten.',
-  pl_PL:
-    'Odinstalowanie Papra trwale usunie wszystkie Twoje dokumenty i ich metadane. Najpierw wyeksportuj wszystko, co chcesz zachować.',
-  fr_FR:
-    "La désinstallation de Papra supprimera définitivement tous vos documents et leurs métadonnées. Exportez d'abord tout ce que vous souhaitez conserver.",
-}

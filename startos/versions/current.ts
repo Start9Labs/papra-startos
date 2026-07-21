@@ -1,43 +1,48 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '26.6.0:0',
+  version: '26.6.1:0',
   releaseNotes: {
-    en_US: `Updated Papra to 26.6.0.
+    en_US: `Updated Papra to 26.6.1.
 
-- AI auto-tagging: documents can be tagged automatically from their extracted content, configurable per organization.
-- External OCR / content-extraction providers (Mistral OCR, Azure Document Intelligence, Docling, or a custom HTTP endpoint) alongside the built-in engine.
-- Faster OCR via tesseract.js v7 (15–35% quicker on images), plus mobile-friendly UI improvements, more translations, and bug fixes.
+- Greatly improves performance when updating and deleting documents in the search index, avoiding unnecessary table scans — noticeable on large collections (10k+ documents).
+- Adds a visual loading state to the rename document modal.
+- Fixes a validation error when the auto-tagging maximum tag count is supplied as a string rather than a number.
+- Fixes the auto-tagging schema for AI providers that do not support every JSON Schema feature, and improves logging when structured data generation fails.
 
-Full release notes: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.0`,
-    es_ES: `Actualiza Papra a 26.6.0.
+Full release notes: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.1`,
+    es_ES: `Actualiza Papra a 26.6.1.
 
-- Etiquetado automático con IA: los documentos pueden etiquetarse automáticamente a partir de su contenido extraído, configurable por organización.
-- Proveedores externos de OCR / extracción de contenido (Mistral OCR, Azure Document Intelligence, Docling o un endpoint HTTP personalizado) junto al motor integrado.
-- OCR más rápido gracias a tesseract.js v7 (15–35 % más rápido en imágenes), además de mejoras de interfaz para móviles, más traducciones y correcciones de errores.
+- Mejora notablemente el rendimiento al actualizar y eliminar documentos en el índice de búsqueda, evitando escaneos de tabla innecesarios: se nota en colecciones grandes (más de 10 000 documentos).
+- Añade un indicador visual de carga a la ventana de renombrar documentos.
+- Corrige un error de validación cuando el número máximo de etiquetas del etiquetado automático se proporciona como texto en lugar de como número.
+- Corrige el esquema de etiquetado automático para los proveedores de IA que no admiten todas las funciones de JSON Schema, y mejora el registro cuando falla la generación de datos estructurados.
 
-Notas de la versión completas: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.0`,
-    de_DE: `Aktualisiert Papra auf 26.6.0.
+Notas de la versión completas: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.1`,
+    de_DE: `Aktualisiert Papra auf 26.6.1.
 
-- KI-Auto-Tagging: Dokumente können anhand ihres extrahierten Inhalts automatisch mit Tags versehen werden, pro Organisation konfigurierbar.
-- Externe OCR-/Inhaltsextraktions-Anbieter (Mistral OCR, Azure Document Intelligence, Docling oder ein benutzerdefinierter HTTP-Endpunkt) neben der integrierten Engine.
-- Schnelleres OCR dank tesseract.js v7 (15–35 % schneller bei Bildern), dazu mobilfreundliche UI-Verbesserungen, mehr Übersetzungen und Fehlerbehebungen.
+- Verbessert die Leistung beim Aktualisieren und Löschen von Dokumenten im Suchindex erheblich und vermeidet unnötige Tabellenscans – spürbar bei großen Sammlungen (mehr als 10.000 Dokumente).
+- Fügt dem Dialog zum Umbenennen von Dokumenten eine visuelle Ladeanzeige hinzu.
+- Behebt einen Validierungsfehler, wenn die maximale Tag-Anzahl der automatischen Verschlagwortung als Zeichenkette statt als Zahl übergeben wird.
+- Behebt das Schema der automatischen Verschlagwortung für KI-Anbieter, die nicht alle JSON-Schema-Funktionen unterstützen, und verbessert die Protokollierung bei fehlgeschlagener Generierung strukturierter Daten.
 
-Vollständige Versionshinweise: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.0`,
-    pl_PL: `Aktualizuje Papra do 26.6.0.
+Vollständige Versionshinweise: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.1`,
+    pl_PL: `Aktualizuje Papra do 26.6.1.
 
-- Automatyczne tagowanie z użyciem AI: dokumenty mogą być automatycznie tagowane na podstawie wyodrębnionej treści, konfigurowalne dla każdej organizacji.
-- Zewnętrzni dostawcy OCR / ekstrakcji treści (Mistral OCR, Azure Document Intelligence, Docling lub własny endpoint HTTP) obok wbudowanego silnika.
-- Szybszy OCR dzięki tesseract.js v7 (15–35% szybciej dla obrazów), a także udoskonalenia interfejsu na urządzeniach mobilnych, więcej tłumaczeń i poprawki błędów.
+- Znacznie poprawia wydajność aktualizowania i usuwania dokumentów w indeksie wyszukiwania, unikając zbędnych skanowań tabel — zauważalne przy dużych kolekcjach (ponad 10 000 dokumentów).
+- Dodaje wizualny wskaźnik ładowania w oknie zmiany nazwy dokumentu.
+- Naprawia błąd walidacji, gdy maksymalna liczba tagów automatycznego tagowania jest podana jako tekst zamiast liczby.
+- Naprawia schemat automatycznego tagowania dla dostawców AI, którzy nie obsługują wszystkich funkcji JSON Schema, oraz ulepsza rejestrowanie błędów podczas generowania danych strukturalnych.
 
-Pełne informacje o wersji: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.0`,
-    fr_FR: `Met à jour Papra vers 26.6.0.
+Pełne informacje o wersji: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.1`,
+    fr_FR: `Met à jour Papra vers 26.6.1.
 
-- Étiquetage automatique par IA : les documents peuvent être étiquetés automatiquement à partir de leur contenu extrait, configurable par organisation.
-- Fournisseurs externes d'OCR / d'extraction de contenu (Mistral OCR, Azure Document Intelligence, Docling ou un point de terminaison HTTP personnalisé) en plus du moteur intégré.
-- OCR plus rapide grâce à tesseract.js v7 (15–35 % plus rapide sur les images), ainsi que des améliorations de l'interface mobile, davantage de traductions et des corrections de bugs.
+- Améliore nettement les performances lors de la mise à jour et de la suppression de documents dans l'index de recherche, en évitant les analyses de table inutiles — perceptible sur les grandes collections (plus de 10 000 documents).
+- Ajoute un indicateur visuel de chargement à la fenêtre de renommage de document.
+- Corrige une erreur de validation lorsque le nombre maximal d'étiquettes de l'étiquetage automatique est fourni sous forme de chaîne plutôt que de nombre.
+- Corrige le schéma d'étiquetage automatique pour les fournisseurs d'IA qui ne prennent pas en charge toutes les fonctionnalités de JSON Schema, et améliore la journalisation en cas d'échec de la génération de données structurées.
 
-Notes de version complètes : https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.0`,
+Notes de version complètes : https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.1`,
   },
   migrations: {
     up: async ({ effects }) => {},

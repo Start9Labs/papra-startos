@@ -1,7 +1,7 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '26.6.1:0',
+  version: '26.6.1:1',
   releaseNotes: {
     en_US: `Updated Papra to 26.6.1.
 

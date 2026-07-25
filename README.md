@@ -34,10 +34,10 @@
 
 ## Image and Container Runtime
 
-| Property      | Value                                                        |
-| ------------- | ------------------------------------------------------------ |
-| Image         | `ghcr.io/papra-hq/papra` (the `-root` variant, unmodified)   |
-| Architectures | x86_64, aarch64                                              |
+| Property      | Value                                                                                                                   |
+| ------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| Image         | `ghcr.io/papra-hq/papra` (the `-root` variant, unmodified)                                                              |
+| Architectures | x86_64, aarch64                                                                                                         |
 | Entrypoint    | Upstream default (`docker-entrypoint.sh pnpm start:with-migrations`) — runs database migrations, then starts the server |
 
 The `-root` image variant is used because StartOS owns the mounted data volume as root. An `init-dirs` one-shot creates `app-data/db` and `app-data/documents` inside the volume before the server starts, since the empty volume shadows the directories the image ships with.
@@ -46,9 +46,9 @@ The `-root` image variant is used because StartOS owns the mounted data volume a
 
 ## Volume and Data Layout
 
-| Volume | Mount Point     | Purpose                                                  |
-| ------ | --------------- | -------------------------------------------------------- |
-| `main` | `/app/app-data` | SQLite database, stored documents, and StartOS settings  |
+| Volume | Mount Point     | Purpose                                                 |
+| ------ | --------------- | ------------------------------------------------------- |
+| `main` | `/app/app-data` | SQLite database, stored documents, and StartOS settings |
 
 StartOS-specific files written to the `main` volume:
 
@@ -70,8 +70,8 @@ Papra stores its database at `app-data/db/db.sqlite` and documents under `app-da
 
 ## Configuration Management
 
-| StartOS-Managed (via actions / env vars)                                                                 | Upstream-Managed (Papra's own UI)                          |
-| -------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| StartOS-Managed (via actions / env vars)                                                                                                                         | Upstream-Managed (Papra's own UI)                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------ |
 | Primary URL (`APP_BASE_URL`), trusted origins (`TRUSTED_ORIGINS`), registration toggle, SMTP credentials, OCR languages, text-extraction toggle, max upload size | Organizations, tags, tagging rules, users, documents, API keys, webhooks |
 
 `TRUSTED_ORIGINS` is set to every address StartOS exposes (LAN, `.local`, Tor, custom domains) so the web UI and authentication work no matter which address you use to reach it. Object storage, intake emails, and folder ingestion are left at upstream defaults (see [Limitations](#limitations-and-differences)).
@@ -97,12 +97,12 @@ The API is served from the same interface under `/api`.
 
 ## Actions (StartOS UI)
 
-| Action               | Purpose                                                                                          | Inputs                                                  | Output |
-| -------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------- | ------ |
-| **Set Primary URL**  | Choose which of Papra's addresses is used to build links in emails, invitations, and OAuth redirects | Select from the service's available URLs                | —      |
-| **Enable/Disable Registration** | Toggle whether new users may sign up. The label and behavior flip with the current state          | None                                                    | —      |
-| **Configure SMTP**   | Set SMTP credentials (system or custom) so Papra can send emails. Without it, emails are only logged | StartOS system SMTP, a provider preset, or custom server | —      |
-| **Document Settings** | OCR text-extraction toggle, OCR languages, and maximum upload size per document                  | Toggle, comma-separated Tesseract codes, size in MB     | —      |
+| Action                          | Purpose                                                                                              | Inputs                                                   | Output |
+| ------------------------------- | ---------------------------------------------------------------------------------------------------- | -------------------------------------------------------- | ------ |
+| **Set Primary URL**             | Choose which of Papra's addresses is used to build links in emails, invitations, and OAuth redirects | Select from the service's available URLs                 | —      |
+| **Enable/Disable Registration** | Toggle whether new users may sign up. The label and behavior flip with the current state             | None                                                     | —      |
+| **Configure SMTP**              | Set SMTP credentials (system or custom) so Papra can send emails. Without it, emails are only logged | StartOS system SMTP, a provider preset, or custom server | —      |
+| **Document Settings**           | OCR text-extraction toggle, OCR languages, and maximum upload size per document                      | Toggle, comma-separated Tesseract codes, size in MB      | —      |
 
 All actions are available in any service status.
 
@@ -155,7 +155,7 @@ None.
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) for build instructions and development workflow.
+Build and development workflow follow the StartOS packaging guide: <https://docs.start9.com/packaging>. Keep `README.md`, `instructions.md`, and `AGENTS.md` in sync with any change to user-visible behavior or package structure.
 
 ---
 

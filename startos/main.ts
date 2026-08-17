@@ -8,6 +8,8 @@ import { appDataDir, getPapraUrls, uiPort } from './utils'
 export const main = sdk.setupMain(async ({ effects }) => {
   console.info(i18n('Starting Papra!'))
 
+  // Throw rather than mint a replacement: a new secret would invalidate every
+  // session silently, so failing loudly is the intended behaviour.
   const authSecret = await storeJson.read((s) => s.authSecret).const(effects)
   if (!authSecret) throw new Error('AUTH_SECRET not found in store.json')
 
@@ -15,6 +17,9 @@ export const main = sdk.setupMain(async ({ effects }) => {
   if (!config) throw new Error('config.json does not exist')
 
   const urls = await getPapraUrls(effects)
+  // primaryUrl re-picks silently when the stored one stops being published --
+  // deliberately no task. Converting this to a prompt means deciding first what
+  // a restore onto different addresses should do.
   const appBaseUrl =
     config.primaryUrl ??
     urls.find((u) => u.includes('.local')) ??

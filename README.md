@@ -219,7 +219,6 @@ startos_managed_env_vars:
   - DOCUMENTS_OCR_LANGUAGES
   - DOCUMENT_STORAGE_MAX_UPLOAD_SIZE
   - EMAILS_DRIVER # when SMTP is configured
-  - EMAILS_DRY_RUN # when SMTP is configured
   - EMAILS_FROM_ADDRESS # when SMTP is configured
   - SMTP_HOST # when SMTP is configured
   - SMTP_PORT # when SMTP is configured

@@ -66,7 +66,6 @@ export const main = sdk.setupMain(async ({ effects }) => {
   if (smtp) {
     Object.assign(env, {
       EMAILS_DRIVER: 'smtp',
-      EMAILS_DRY_RUN: 'false',
       EMAILS_FROM_ADDRESS: smtp.from,
       SMTP_HOST: smtp.host,
       SMTP_PORT: String(smtp.port),

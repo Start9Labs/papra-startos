@@ -39,6 +39,10 @@ const dict = {
 
   // init/taskRegistration.ts
   'Once you have created your account, run the "Disable Registration" action so that no one else can sign up on your server.': 24,
+  'Allowed Email Domains': 25,
+  'Restrict new accounts to these email domains, such as example.com. Matches are exact and case-insensitive; subdomains must be listed separately. Leave empty to allow any domain except those Papra forbids. This does not enable registration or verify email ownership.': 26,
+  'Registration Settings': 27,
+  'Choose which email domains may register new accounts. Existing accounts are unaffected.': 28,
 } as const
 
 /**

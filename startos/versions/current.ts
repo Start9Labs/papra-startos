@@ -1,43 +1,53 @@
 import { IMPOSSIBLE, VersionInfo } from '@start9labs/start-sdk'
 
 export const current = VersionInfo.of({
-  version: '26.6.2:0',
+  version: '26.7.0:0',
   releaseNotes: {
-    en_US: `Updated Papra to 26.6.2.
+    en_US: `Updated Papra to 26.7.0.
 
-- Disabling registration now blocks direct email and password sign-ups through the API as well as hiding the sign-up interface.
-- Password resets now revoke all existing sessions, and public document links stop working when their organization is deleted.
-- Improves PDF previews, batch document selection, database query performance, and external content extraction.
+- Reprocess existing documents from the content tab to rerun text extraction and tagging. Fonts are now bundled for offline use, and OCR handles EXIF image rotation correctly.
+- New Registration Settings action restricts new accounts to selected email domains without changing existing accounts or enabling registration.
+- The Web Interface check now requires a healthy database response instead of accepting HTTP errors as ready.
+- Fixes reinviting users who left an organization and prevents custom OAuth providers from creating accounts when registration is disabled.
+- API clients: trashing a document now returns HTTP 204 with no body instead of a success JSON object.
 
-Full release notes: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.2`,
-    es_ES: `Actualiza Papra a 26.6.2.
+Full release notes: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.7.0`,
+    es_ES: `Actualiza Papra a 26.7.0.
 
-- Desactivar el registro ahora bloquea las altas directas con correo electrónico y contraseña a través de la API, además de ocultar la interfaz de registro.
-- Los restablecimientos de contraseña ahora revocan todas las sesiones existentes, y los enlaces públicos a documentos dejan de funcionar cuando se elimina su organización.
-- Mejora las vistas previas de PDF, la selección de documentos por lotes, el rendimiento de las consultas a la base de datos y la extracción externa de contenido.
+- Vuelve a procesar documentos existentes desde la pestaña de contenido para repetir la extracción de texto y el etiquetado. Las fuentes ahora se incluyen para uso sin conexión y OCR respeta la rotación EXIF de las imágenes.
+- La nueva acción Configuración del registro restringe las cuentas nuevas a los dominios de correo seleccionados sin cambiar las cuentas existentes ni habilitar el registro.
+- La comprobación de la interfaz web ahora exige una respuesta de base de datos saludable en lugar de aceptar errores HTTP como estado listo.
+- Corrige las invitaciones a usuarios que abandonaron una organización e impide que proveedores OAuth personalizados creen cuentas cuando el registro está deshabilitado.
+- Clientes de API: enviar un documento a la papelera ahora devuelve HTTP 204 sin cuerpo en lugar de un objeto JSON de éxito.
 
-Notas de la versión completas: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.2`,
-    de_DE: `Aktualisiert Papra auf 26.6.2.
+Notas de la versión completas: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.7.0`,
+    de_DE: `Aktualisiert Papra auf 26.7.0.
 
-- Das Deaktivieren der Registrierung blockiert jetzt auch direkte E-Mail- und Passwortregistrierungen über die API und blendet weiterhin die Registrierungsoberfläche aus.
-- Das Zurücksetzen des Passworts widerruft jetzt alle bestehenden Sitzungen, und öffentliche Dokumentlinks funktionieren nicht mehr, wenn ihre Organisation gelöscht wird.
-- Verbessert PDF-Vorschauen, die Stapelauswahl von Dokumenten, die Leistung von Datenbankabfragen und die externe Inhaltsextraktion.
+- Vorhandene Dokumente lassen sich im Inhalt-Reiter erneut verarbeiten, um Textextraktion und Verschlagwortung zu wiederholen. Schriftarten sind für die Offline-Nutzung enthalten, und OCR berücksichtigt die EXIF-Bilddrehung korrekt.
+- Die neue Aktion Registrierungseinstellungen beschränkt neue Konten auf ausgewählte E-Mail-Domains, ohne bestehende Konten zu ändern oder die Registrierung zu aktivieren.
+- Die Prüfung der Weboberfläche verlangt jetzt eine gesunde Datenbankantwort, statt HTTP-Fehler als bereit zu akzeptieren.
+- Behebt erneute Einladungen für Benutzer, die eine Organisation verlassen haben, und verhindert die Kontoerstellung über benutzerdefinierte OAuth-Anbieter bei deaktivierter Registrierung.
+- API-Clients: Das Verschieben eines Dokuments in den Papierkorb liefert jetzt HTTP 204 ohne Inhalt statt eines JSON-Erfolgsobjekts.
 
-Vollständige Versionshinweise: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.2`,
-    pl_PL: `Aktualizuje Papra do 26.6.2.
+Vollständige Versionshinweise: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.7.0`,
+    pl_PL: `Aktualizuje Papra do 26.7.0.
 
-- Wyłączenie rejestracji blokuje teraz również bezpośrednią rejestrację przez API za pomocą adresu e-mail i hasła, a nie tylko ukrywa interfejs rejestracji.
-- Zresetowanie hasła unieważnia teraz wszystkie istniejące sesje, a publiczne łącza do dokumentów przestają działać po usunięciu ich organizacji.
-- Ulepsza podgląd plików PDF, zbiorcze zaznaczanie dokumentów, wydajność zapytań do bazy danych i zewnętrzne wyodrębnianie treści.
+- Ponownie przetwarzaj istniejące dokumenty na karcie zawartości, aby powtórzyć ekstrakcję tekstu i tagowanie. Czcionki są dołączone do użytku offline, a OCR prawidłowo obsługuje obrót obrazów zapisany w EXIF.
+- Nowa akcja Ustawienia rejestracji ogranicza nowe konta do wybranych domen e-mail bez zmiany istniejących kont ani włączania rejestracji.
+- Kontrola interfejsu webowego wymaga teraz odpowiedzi potwierdzającej zdrową bazę danych zamiast uznawać błędy HTTP za gotowość.
+- Naprawia ponowne zapraszanie użytkowników, którzy opuścili organizację, i blokuje tworzenie kont przez niestandardowych dostawców OAuth przy wyłączonej rejestracji.
+- Klienci API: przeniesienie dokumentu do kosza zwraca teraz HTTP 204 bez treści zamiast obiektu JSON potwierdzającego sukces.
 
-Pełne informacje o wersji: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.2`,
-    fr_FR: `Met à jour Papra vers 26.6.2.
+Pełne informacje o wersji: https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.7.0`,
+    fr_FR: `Met à jour Papra vers 26.7.0.
 
-- La désactivation des inscriptions bloque désormais les inscriptions directes par adresse e-mail et mot de passe via l'API, en plus de masquer l'interface d'inscription.
-- La réinitialisation du mot de passe révoque désormais toutes les sessions existantes, et les liens publics vers des documents cessent de fonctionner lorsque leur organisation est supprimée.
-- Améliore les aperçus PDF, la sélection de documents par lots, les performances des requêtes de base de données et l'extraction externe de contenu.
+- Retraitez les documents existants depuis l'onglet de contenu pour relancer l'extraction de texte et l'étiquetage. Les polices sont incluses pour une utilisation hors ligne et l'OCR respecte la rotation EXIF des images.
+- La nouvelle action Paramètres des inscriptions limite les nouveaux comptes aux domaines de messagerie choisis sans modifier les comptes existants ni activer les inscriptions.
+- La vérification de l'interface web exige désormais une réponse indiquant une base de données saine au lieu de considérer les erreurs HTTP comme un état prêt.
+- Corrige les nouvelles invitations aux utilisateurs ayant quitté une organisation et empêche les fournisseurs OAuth personnalisés de créer des comptes lorsque les inscriptions sont désactivées.
+- Clients API : mettre un document à la corbeille renvoie désormais HTTP 204 sans corps au lieu d'un objet JSON de succès.
 
-Notes de version complètes : https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.6.2`,
+Notes de version complètes : https://github.com/papra-hq/papra/releases/tag/%40papra/app%4026.7.0`,
   },
   migrations: {
     up: async ({ effects }) => {},

@@ -27,8 +27,13 @@ The Web UI is both the application and its API. On first launch you'll see a sig
 
 - **Set Primary URL** — choose which of your Papra addresses is treated as primary for links in emails, invitations, and OAuth redirects.
 - **Enable / Disable Registration** — control whether new users can sign up. Disable it after creating your account; re-enable it briefly whenever you need to add someone.
+- **Registration Settings** — restrict new accounts to specific email domains. Add one domain per entry, such as `example.com`; matching ignores case but does not include subdomains. Leave the list empty to remove the restriction. Papra's forbidden domains still take precedence. This does not enable registration or verify email ownership, and existing accounts are unaffected.
 - **Configure SMTP** — add email credentials (your StartOS system SMTP, a provider preset, or a custom server) so Papra can send password-reset, email-verification, and invitation messages. Until you do this, those emails are only written to the service logs.
 - **Document Settings** — turn OCR text extraction on or off, set which OCR languages to use (comma-separated Tesseract codes such as `eng,fra,deu`), and set the maximum upload size per document.
+
+Changing an action's settings restarts Papra if it is running. A stopped service uses the new settings when it next starts.
+
+If the Web Interface check stays unready after the initial startup period, check the service logs for database or configuration errors. The check requires a healthy database response, not just a reachable web server.
 
 ## Limitations
 

@@ -65,7 +65,7 @@ Two models, both on the `main` volume, and **neither is read by Papra**. Papra i
 
 | File          | Format | Modelled                | Written by                             |
 | ------------- | ------ | ----------------------- | -------------------------------------- |
-| `config.json` | JSON   | Yes — `FileHelper.json` | Install, every init, and three actions |
+| `config.json` | JSON   | Yes — `FileHelper.json` | Install, every init, and configuration actions |
 | `store.json`  | JSON   | Yes — `FileHelper.json` | Install                                |
 
 | Key                        | Set by                               | Notes                                                        |
@@ -73,12 +73,13 @@ Two models, both on the `main` volume, and **neither is read by Papra**. Papra i
 | `authSecret`               | Install                              | A 64-character secret signing every session; in `store.json` |
 | `primaryUrl`               | Init, and the Set Primary URL action | The address Papra builds links from                          |
 | `registrationEnabled`      | Install, then the toggle action      | Seeded **on**, so you can create the first account           |
+| `allowedEmailDomains`      | Registration Settings                | Empty by default; emitted as `AUTH_ALLOWED_EMAIL_DOMAINS`    |
 | `contentExtractionEnabled` | Install, then Document Settings      | Whether uploads get OCR'd                                    |
 | `ocrLanguages`             | Install, then Document Settings      | Tesseract language codes                                     |
 | `maxUploadSizeMb`          | Install, then Document Settings      | Per-document upload cap                                      |
 | `smtp`                     | The Configure SMTP action            | StartOS's system SMTP, your own server, or disabled          |
 
-Hand edits survive — these are ordinary JSON models — but they take effect only on the next start, since the environment is built once at daemon launch.
+Hand edits survive — these are ordinary JSON models. Changes to the watched configuration restart the running daemon to rebuild its environment; a stopped service uses them on its next start.
 
 **`primaryUrl` re-picks itself.** On every init, if the stored value is missing or is no longer one of the addresses the interface publishes, the package silently replaces it with the `.local` address. No task is raised: unlike a server whose links have already gone out to other people, Papra's links are mostly its own UI's, and a stale primary URL is worse than a changed one.
 
@@ -103,7 +104,7 @@ One interface, serving the web app and its API.
 | --------- | ---- | ---- | ---- | --------------------------------------------------- |
 | Web UI    | `ui` | ui   | 1221 | The Papra web interface for managing your documents |
 
-The port is bound on the `ui-multi` MultiHost and is not masked. Adding or removing an address changes `TRUSTED_ORIGINS` on the next start, so a newly added domain works without any action here.
+The port is bound on the `ui-multi` MultiHost and is not masked. Adding or removing an address rebuilds `TRUSTED_ORIGINS` and restarts the running daemon, so a newly added domain needs no configuration action here.
 
 ## Installation and First-Run Flow
 
@@ -115,14 +116,14 @@ Email is optional and off at install. Without SMTP configured, Papra logs the em
 
 ## Actions
 
-Four actions, all available whether or not the service is running, and all applied on the next start.
+Configuration actions update the environment used to launch Papra. Changes restart the daemon when it is running; stopped services use them on the next start.
 
 ### Set Primary URL
 
 Chooses which published address Papra treats as primary.
 
 - **What it changes:** `primaryUrl` in `config.json`, and through it `APP_BASE_URL`.
-- **Cost:** seconds, then a restart.
+- **Cost:** seconds; a changed value restarts the running daemon.
 - **Repeat safety:** idempotent. Because every published address is trusted regardless, changing this mostly affects the links Papra writes into emails, organisation invitations, and OAuth redirects — not whether the UI works from a given address.
 
 ### Disable Registration / Enable Registration
@@ -130,16 +131,26 @@ Chooses which published address Papra treats as primary.
 One action whose name, description, and warning flip with the current state.
 
 - **What it changes:** `registrationEnabled` in `config.json`.
-- **Cost:** seconds, then a restart.
+- **Cost:** seconds; toggling restarts the running daemon.
 - **Repeat safety:** it is a toggle — running it twice returns to where you started.
 - **Existing accounts are unaffected** either way; this only governs whether new ones can be created.
+
+### Registration Settings
+
+Use this when temporarily reopening registration for accounts from known email domains.
+
+- **What it changes:** `allowedEmailDomains` in `config.json`, emitted as a comma-separated allowlist in `AUTH_ALLOWED_EMAIL_DOMAINS`.
+- **Cost:** seconds; changing the list restarts the running daemon.
+- **Repeat safety:** idempotent; the form is pre-filled.
+- Domains match exactly, ignoring case. Subdomains need separate entries. An empty list removes the allowlist restriction; Papra's forbidden domains still take precedence.
+- This does not enable registration, affect existing accounts, or verify ownership of an email address. The existing toggle still controls whether anyone may register.
 
 ### Configure SMTP
 
 Sets up outbound email for password resets, email verification, and organisation invitations.
 
-- **What it changes:** `smtp` in `config.json`; the credentials become Papra's email environment on the next start.
-- **Cost:** seconds, then a restart.
+- **What it changes:** `smtp` in `config.json`; the credentials become Papra's email environment at launch.
+- **Cost:** seconds; changed settings restart the running daemon.
 - **Repeat safety:** idempotent; the form is pre-filled.
 - **Three choices:** StartOS's system SMTP, your own server, or disabled. With the system option you can still override the From address.
 
@@ -148,7 +159,7 @@ Sets up outbound email for password resets, email verification, and organisation
 Text extraction, OCR languages, and the per-document upload cap.
 
 - **What it changes:** the three corresponding keys in `config.json`.
-- **Cost:** seconds, then a restart.
+- **Cost:** seconds; changed settings restart the running daemon.
 - **Repeat safety:** idempotent; the form is pre-filled.
 - **Turning off text extraction is the CPU lever** on a low-powered server. It applies to future uploads — documents already processed keep their extracted text.
 - **An upload cap of 0 means unlimited.**
@@ -171,7 +182,7 @@ One check, on the only daemon.
 | ------- | --------------- | ----------------------------------- | ----- |
 | `papra` | "Web Interface" | `GET /api/health` on the local port | 1 min |
 
-This is Papra's own health endpoint rather than a port probe, so it reports the app's readiness and not merely that something is listening. The minute of grace covers a first start, where the database is created and migrated before Papra answers.
+The check requires HTTP 200 and a JSON response with `status: 'ok'` and `isEverythingOk: true` from Papra's database-health endpoint. HTTP errors, unhealthy or malformed responses, and requests exceeding one second fail readiness. The minute of grace covers a first start, where the database is created and migrated before Papra answers.
 
 A failure after that is the app itself — most often a value in the derived environment it rejects, or a data directory it cannot write. The service logs name the cause. A missing session secret is a hard failure by design: the package refuses to start rather than silently minting a new one and invalidating every session.
 
@@ -186,7 +197,7 @@ The `main` volume is copied wholesale — `sdk.Backups.ofVolumes('main')`. No du
 ## Limitations and Differences
 
 1. **Registration is open at install** and stays open until you run the action. That is deliberate — there is no bootstrap admin — but it is the one window where the server is exposed.
-2. **No configuration file reaches Papra.** Every setting is passed as environment at daemon start, so nothing applies until a restart.
+2. **No configuration file reaches Papra.** Every setting is passed as environment at daemon start; configuration changes restart the running daemon.
 3. **Without SMTP, emails are only logged.** Password resets and invitations silently go nowhere.
 4. **The primary URL is silently re-picked** when the stored one stops being published; there is no prompt.
 5. **Text extraction is CPU-heavy** and is the first thing to turn off on a small device.
@@ -215,6 +226,7 @@ startos_managed_env_vars:
   - APP_BASE_URL
   - TRUSTED_ORIGINS
   - AUTH_IS_REGISTRATION_ENABLED
+  - AUTH_ALLOWED_EMAIL_DOMAINS
   - DOCUMENTS_CONTENT_EXTRACTION_ENABLED
   - DOCUMENTS_OCR_LANGUAGES
   - DOCUMENT_STORAGE_MAX_UPLOAD_SIZE
@@ -231,6 +243,7 @@ interfaces:
 actions:
   - set-primary-url
   - toggle-registration # name flips with the current state
+  - configure-registration
   - manage-smtp
   - configure-documents
 tasks:

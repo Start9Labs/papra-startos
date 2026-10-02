@@ -7,6 +7,7 @@ const shape = z.object({
   // catch default is false: a corrupt or missing value must fail closed rather
   // than reopen sign-up on a running instance. The asymmetry is deliberate.
   registrationEnabled: z.boolean().catch(false),
+  allowedEmailDomains: z.array(z.string()).catch([]),
   contentExtractionEnabled: z.boolean().catch(true),
   ocrLanguages: z.string().catch('eng'),
   maxUploadSizeMb: z.number().int().nonnegative().catch(25),

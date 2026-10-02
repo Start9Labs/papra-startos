@@ -54,6 +54,7 @@ export const main = sdk.setupMain(async ({ effects }) => {
     APP_BASE_URL: appBaseUrl,
     TRUSTED_ORIGINS: trustedOrigins,
     AUTH_IS_REGISTRATION_ENABLED: String(config.registrationEnabled),
+    AUTH_ALLOWED_EMAIL_DOMAINS: config.allowedEmailDomains.join(','),
     DOCUMENTS_CONTENT_EXTRACTION_ENABLED: String(
       config.contentExtractionEnabled,
     ),
@@ -105,15 +106,23 @@ export const main = sdk.setupMain(async ({ effects }) => {
       ready: {
         display: i18n('Web Interface'),
         gracePeriod: 60000,
-        fn: () =>
-          sdk.healthCheck.checkWebUrl(
-            effects,
-            `http://127.0.0.1:${uiPort}/api/health`,
-            {
-              successMessage: i18n('Papra is ready'),
-              errorMessage: i18n('Papra is not ready'),
-            },
-          ),
+        fn: async () => {
+          try {
+            const response = await fetch(
+              `http://127.0.0.1:${uiPort}/api/health`,
+              { signal: AbortSignal.timeout(1000) },
+            )
+            const health = await response.json()
+            if (
+              response.status === 200 &&
+              health.status === 'ok' &&
+              health.isEverythingOk === true
+            ) {
+              return { result: 'success', message: i18n('Papra is ready') }
+            }
+          } catch {}
+          return { result: 'failure', message: i18n('Papra is not ready') }
+        },
       },
       requires: ['init-dirs'],
     })

@@ -2,6 +2,7 @@ import { T } from '@start9labs/start-sdk'
 import { configJson } from './fileModels/config.json'
 import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
+import { primaryUrl } from './primaryUrl'
 import { sdk } from './sdk'
 import { appDataDir, getPapraUrls, uiPort } from './utils'
 
@@ -17,13 +18,8 @@ export const main = sdk.setupMain(async ({ effects }) => {
   if (!config) throw new Error('config.json does not exist')
 
   const urls = await getPapraUrls(effects)
-  // primaryUrl re-picks silently when the stored one stops being published --
-  // deliberately no task. Converting this to a prompt means deciding first what
-  // a restore onto different addresses should do.
   const appBaseUrl =
-    config.primaryUrl ??
-    urls.find((u) => u.includes('.local')) ??
-    urls[0] ??
+    (await primaryUrl.bestUsable(effects).const()) ??
     `http://localhost:${uiPort}`
 
   // Papra pins auth/CORS to APP_BASE_URL; trust every address StartOS exposes so

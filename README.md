@@ -63,32 +63,32 @@ Papra's image already defaults its database URL, document storage, and config di
 
 Two models, both on the `main` volume, and **neither is read by Papra**. Papra is configured entirely by environment; these files are where the package keeps what it needs to build that environment on each start.
 
-| File          | Format | Modelled                | Written by                             |
-| ------------- | ------ | ----------------------- | -------------------------------------- |
+| File          | Format | Modelled                | Written by                                     |
+| ------------- | ------ | ----------------------- | ---------------------------------------------- |
 | `config.json` | JSON   | Yes — `FileHelper.json` | Install, every init, and configuration actions |
-| `store.json`  | JSON   | Yes — `FileHelper.json` | Install                                |
+| `store.json`  | JSON   | Yes — `FileHelper.json` | Install                                        |
 
-| Key                        | Set by                               | Notes                                                        |
-| -------------------------- | ------------------------------------ | ------------------------------------------------------------ |
-| `authSecret`               | Install                              | A 64-character secret signing every session; in `store.json` |
-| `primaryUrl`               | Init, and the Set Primary URL action | The address Papra builds links from                          |
-| `registrationEnabled`      | Install, then the toggle action      | Seeded **on**, so you can create the first account           |
-| `allowedEmailDomains`      | Registration Settings                | Empty by default; emitted as `AUTH_ALLOWED_EMAIL_DOMAINS`    |
-| `contentExtractionEnabled` | Install, then Document Settings      | Whether uploads get OCR'd                                    |
-| `ocrLanguages`             | Install, then Document Settings      | Tesseract language codes                                     |
-| `maxUploadSizeMb`          | Install, then Document Settings      | Per-document upload cap                                      |
-| `smtp`                     | The Configure SMTP action            | StartOS's system SMTP, your own server, or disabled          |
+| Key                        | Set by                          | Notes                                                        |
+| -------------------------- | ------------------------------- | ------------------------------------------------------------ |
+| `authSecret`               | Install                         | A 64-character secret signing every session; in `store.json` |
+| `primaryUrl`               | The Set Primary URL action      | The address chosen for Papra to build links from             |
+| `registrationEnabled`      | Install, then the toggle action | Seeded **on**, so you can create the first account           |
+| `allowedEmailDomains`      | Registration Settings           | Empty by default; emitted as `AUTH_ALLOWED_EMAIL_DOMAINS`    |
+| `contentExtractionEnabled` | Install, then Document Settings | Whether uploads get OCR'd                                    |
+| `ocrLanguages`             | Install, then Document Settings | Tesseract language codes                                     |
+| `maxUploadSizeMb`          | Install, then Document Settings | Per-document upload cap                                      |
+| `smtp`                     | The Configure SMTP action       | StartOS's system SMTP, your own server, or disabled          |
 
 Hand edits survive — these are ordinary JSON models. Changes to the watched configuration restart the running daemon to rebuild its environment; a stopped service uses them on its next start.
 
-**`primaryUrl` re-picks itself.** On every init, if the stored value is missing or is no longer one of the addresses the interface publishes, the package silently replaces it with the `.local` address. No task is raised: unlike a server whose links have already gone out to other people, Papra's links are mostly its own UI's, and a stale primary URL is worse than a changed one.
+**`primaryUrl` is the user's choice and is never rewritten by init.** `APP_BASE_URL` follows it to that hostname's current port and scheme. While it is unset, or its hostname is not one of the Web UI interface's addresses, `APP_BASE_URL` is the `.local` address instead and the Set Primary URL task is raised; the choice is kept, and Papra returns to it when the address does.
 
 Two environment values are derived rather than stored:
 
-| Variable          | Built from                                                                           |
-| ----------------- | ------------------------------------------------------------------------------------ |
-| `APP_BASE_URL`    | `primaryUrl`, falling back to the `.local` address, then any address, then localhost |
-| `TRUSTED_ORIGINS` | **Every** address the interface publishes, plus the base URL                         |
+| Variable          | Built from                                                                             |
+| ----------------- | -------------------------------------------------------------------------------------- |
+| `APP_BASE_URL`    | `primaryUrl` if published, else the `.local` address, then any address, then localhost |
+| `TRUSTED_ORIGINS` | **Every** address the interface publishes, plus the base URL                           |
 
 Papra pins its auth and CORS behaviour to `APP_BASE_URL`, which would reject the UI when reached at any other address. Trusting the full published set is what makes the same install work over LAN, over Tor, and on a custom domain at the same time.
 
@@ -106,9 +106,11 @@ One interface, serving the web app and its API.
 
 The port is bound on the `ui-multi` MultiHost and is not masked. Adding or removing an address rebuilds `TRUSTED_ORIGINS` and restarts the running daemon, so a newly added domain needs no configuration action here.
 
+**Open UI opens the primary URL** — the interface nominates it — falling back to StartOS's usual choice when it is not one of the interface's addresses.
+
 ## Installation and First-Run Flow
 
-Install generates the session secret, seeds the document defaults, picks the `.local` address as the primary URL, and — importantly — **leaves registration open**. No credential is shown, because Papra has no bootstrap admin: the account you create in the web UI is yours.
+Install generates the session secret, seeds the document defaults, uses the `.local` address as the base URL until you choose a primary URL (a task asks for one), and — importantly — **leaves registration open**. No credential is shown, because Papra has no bootstrap admin: the account you create in the web UI is yours.
 
 That open window is the point of the task raised at install. Create your account, then run Disable Registration. Until you do, **anyone who can reach a published address can sign up.**
 
@@ -120,9 +122,9 @@ Configuration actions update the environment used to launch Papra. Changes resta
 
 ### Set Primary URL
 
-Chooses which published address Papra treats as primary.
+Chooses which published address Papra treats as primary. Built by `sdk.setupPrimaryUrl`; the select pre-selects the `.local` address.
 
-- **What it changes:** `primaryUrl` in `config.json`, and through it `APP_BASE_URL`.
+- **What it changes:** `primaryUrl` in `config.json`, and through it `APP_BASE_URL` and the address Open UI opens.
 - **Cost:** seconds; a changed value restarts the running daemon.
 - **Repeat safety:** idempotent. Because every published address is trusted regardless, changing this mostly affects the links Papra writes into emails, organisation invitations, and OAuth redirects — not whether the UI works from a given address.
 
@@ -132,7 +134,7 @@ One action whose name, description, and warning flip with the current state.
 
 - **What it changes:** `registrationEnabled` in `config.json`.
 - **Cost:** seconds; toggling restarts the running daemon.
-- **Repeat safety:** it is a toggle — running it twice returns to where you started.
+- **Repeat safety:** it is a toggle — running it twice returns to where you started. Both directions ask for confirmation.
 - **Existing accounts are unaffected** either way; this only governs whether new ones can be created.
 
 ### Registration Settings
@@ -166,13 +168,14 @@ Text extraction, OCR languages, and the per-document upload cap.
 
 ## Tasks
 
-One task, raised at install.
+Two tasks, and one of them can come back.
 
-| Task                 | Severity    | Raised when | Cleared when    |
-| -------------------- | ----------- | ----------- | --------------- |
-| Disable Registration | `important` | At install  | The action runs |
+| Task                 | Severity    | Raised when                                                               | Cleared when                                          |
+| -------------------- | ----------- | ------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Disable Registration | `important` | At install                                                                | The action runs                                       |
+| Set Primary URL      | `important` | While no primary URL is chosen, or the chosen one is not a Web UI address | A Web UI address is chosen, or the chosen one returns |
 
-`important` rather than `critical` because the service is fully functional with the task outstanding — the risk is that it stays open, not that anything is broken.
+Both are `important` rather than `critical` because the service is fully functional with them outstanding — the risk is that registration stays open, or that links point at the `.local` address, not that anything is broken.
 
 ## Health Checks
 
@@ -191,15 +194,15 @@ A failure after that is the app itself — most often a value in the derived env
 The `main` volume is copied wholesale — `sdk.Backups.ofVolumes('main')`. No dump step and nothing excluded.
 
 - **Included:** the SQLite database with every account, organisation, and document record; every uploaded document; the session secret; and both config files.
-- **Restore:** complete, and sessions survive because the secret does. No task is raised.
-- **Expect the primary URL to change.** If the restored server publishes different addresses, init silently re-picks the `.local` one rather than leaving a dead value — so check Set Primary URL if you had chosen a specific address.
+- **Restore:** complete, and sessions survive because the secret does.
+- **Check the primary URL after a restore.** If the restored server does not publish the chosen address, Papra uses the `.local` one and raises the Set Primary URL task until that address returns or another is chosen.
 
 ## Limitations and Differences
 
 1. **Registration is open at install** and stays open until you run the action. That is deliberate — there is no bootstrap admin — but it is the one window where the server is exposed.
 2. **No configuration file reaches Papra.** Every setting is passed as environment at daemon start; configuration changes restart the running daemon.
 3. **Without SMTP, emails are only logged.** Password resets and invitations silently go nowhere.
-4. **The primary URL is silently re-picked** when the stored one stops being published; there is no prompt.
+4. **While the chosen primary URL is not published, Papra runs on the `.local` address** and a task asks for another choice.
 5. **Text extraction is CPU-heavy** and is the first thing to turn off on a small device.
 6. **The image runs as root**, which is what lets the package create its data directories on a fresh volume.
 7. **No riscv64 build.** x86_64 and aarch64 only.
@@ -248,6 +251,7 @@ actions:
   - configure-documents
 tasks:
   - { action: toggle-registration, severity: important }
+  - { action: set-primary-url, severity: important } # while unset or unpublished
 health_checks:
   - papra # displayed "Web Interface"; GET /api/health
 ```

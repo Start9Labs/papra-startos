@@ -31,6 +31,8 @@ export default {
     26: 'Restringe las cuentas nuevas a estos dominios de correo, como example.com. Las coincidencias son exactas y no distinguen mayúsculas; los subdominios deben añadirse por separado. Deja la lista vacía para permitir cualquier dominio excepto los que Papra prohíbe. Esto no habilita el registro ni verifica la titularidad del correo.',
     27: 'Configuración del registro',
     28: 'Elige qué dominios de correo pueden registrar cuentas nuevas. Las cuentas existentes no se ven afectadas.',
+    29: 'Elige la URL que Papra pone en los enlaces que envía',
+    30: 'Nadie nuevo podrá registrarse hasta que vuelvas a habilitar el registro. Las cuentas existentes no se ven afectadas.',
   },
   de_DE: {
     0: 'Papra wird gestartet!',
@@ -62,6 +64,8 @@ export default {
     26: 'Beschränkt neue Konten auf diese E-Mail-Domains, etwa example.com. Domains müssen exakt übereinstimmen, ohne Beachtung der Groß- und Kleinschreibung; Subdomains müssen separat aufgeführt werden. Eine leere Liste erlaubt alle Domains außer den von Papra gesperrten. Dies aktiviert weder die Registrierung noch die Prüfung der E-Mail-Inhaberschaft.',
     27: 'Registrierungseinstellungen',
     28: 'Wählen Sie, welche E-Mail-Domains neue Konten registrieren dürfen. Bestehende Konten bleiben unverändert.',
+    29: 'Wählen Sie die URL, die Papra in die von ihm gesendeten Links einsetzt',
+    30: 'Neue Benutzer können sich erst wieder registrieren, wenn die Registrierung erneut aktiviert wird. Bestehende Konten sind nicht betroffen.',
   },
   pl_PL: {
     0: 'Uruchamianie Papra!',
@@ -93,6 +97,8 @@ export default {
     26: 'Ogranicza nowe konta do tych domen e-mail, np. example.com. Dopasowanie jest dokładne i nie rozróżnia wielkości liter; subdomeny trzeba podać osobno. Pusta lista zezwala na każdą domenę poza zabronionymi przez Papra. Nie włącza to rejestracji ani nie weryfikuje własności adresu e-mail.',
     27: 'Ustawienia rejestracji',
     28: 'Wybierz domeny e-mail, które mogą rejestrować nowe konta. Istniejące konta pozostają bez zmian.',
+    29: 'Wybierz adres URL, który Papra umieszcza w wysyłanych odnośnikach',
+    30: 'Nikt nowy nie będzie mógł się zarejestrować, dopóki rejestracja nie zostanie ponownie włączona. Istniejące konta pozostają bez zmian.',
   },
   fr_FR: {
     0: 'Démarrage de Papra !',
@@ -124,5 +130,7 @@ export default {
     26: 'Limite les nouveaux comptes à ces domaines de messagerie, comme example.com. La correspondance est exacte et insensible à la casse ; les sous-domaines doivent être indiqués séparément. Une liste vide autorise tous les domaines sauf ceux interdits par Papra. Cela ne permet pas les inscriptions et ne vérifie pas la propriété des adresses e-mail.',
     27: 'Paramètres des inscriptions',
     28: 'Choisissez les domaines de messagerie pouvant créer de nouveaux comptes. Les comptes existants ne sont pas affectés.',
+    29: "Choisissez l'URL que Papra utilise dans les liens qu'il envoie",
+    30: "Personne ne pourra plus s'inscrire tant que les inscriptions ne seront pas réactivées. Les comptes existants ne sont pas affectés.",
   },
 } satisfies Record<string, LangDict>

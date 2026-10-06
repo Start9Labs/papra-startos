@@ -18,14 +18,22 @@ Freshly scaffolded? Work the
 guide page, not a file in this repo — read it, don't copy it in.
 
 Keep `README.md` (technical reference for an AI support or administering agent) and
-`instructions.md` (end-user docs) in sync with your changes.
+`instructions.md` (end-user docs) in sync with your changes. This file restates neither:
+whoever changes the package has both, so it carries only what they don't — repo mechanics,
+a change that looks right and is not, where the next thing gets added, a naming trap, a
+build or test invocation particular to this repo.
 
-**Bugs and feature requests are GitHub issues on this repo** — file them as you find them.
+**Fix a defect you spot rather than reporting it** — you have the package open and the
+context to be sure. File **a GitHub issue on this repo** only when the call isn't yours to
+make: you can't pin the cause down, two defensible fixes exist, or it's too large to ride on
+the work in hand. An open issue is a report, not a queue — implement one when you're asked
+to or when it's labelled `Approved`, then close it with `Closes #<n>`.
+
 Don't record work in the repo instead: no `TODO.md`, no `NOTES.md`, no `PLAN.md`. What you
 verified, tried, and decided belongs in the commit message and the PR body.
 
 ## This repo
 
-- **`TRUSTED_ORIGINS` must carry every published address, not just the primary one.** Papra pins auth and CORS to `APP_BASE_URL` alone, so an install reached over Tor or a custom domain rejects its own UI without this.
-- **`init-dirs` runs as root and the image is the `-root` tag for that reason.** StartOS mounts volumes root-owned and empty, and Papra will not create `db/` and `documents/` itself.
-- **Every setting reaches Papra as environment built in `main`.** There is no config file the app reads, so an action's write does nothing until the daemon restarts; a change that must apply live has nowhere to go.
+- **Keep every published address in `TRUSTED_ORIGINS`, not just the primary one.** Papra pins auth and CORS to `APP_BASE_URL` alone, so an install reached over Tor or a custom domain rejects its own UI without this.
+- **Keep the `-root` image tag while `init-dirs` creates the data directories.** StartOS mounts volumes root-owned and empty, and Papra will not create `db/` and `documents/` itself.
+- **`config.json` is the package's file, not Papra's.** Papra reads only the environment built in `main`, so an action's write does nothing until the daemon restarts.

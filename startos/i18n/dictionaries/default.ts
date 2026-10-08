@@ -11,7 +11,7 @@ const dict = {
   'Web UI': 4,
   'The Papra web interface for managing your documents': 5,
 
-  // actions/setPrimaryUrl.ts
+  // primaryUrl.ts
   'Primary URL': 6,
   'Set Primary URL': 7,
   'Choose which of your Papra addresses Papra should treat as primary. It is used to build the links in emails, organization invitations, and OAuth redirects.': 8,
@@ -39,10 +39,18 @@ const dict = {
 
   // init/taskRegistration.ts
   'Once you have created your account, run the "Disable Registration" action so that no one else can sign up on your server.': 24,
+
+  // actions/configureRegistration.ts
   'Allowed Email Domains': 25,
   'Restrict new accounts to these email domains, such as example.com. Matches are exact and case-insensitive; subdomains must be listed separately. Leave empty to allow any domain except those Papra forbids. This does not enable registration or verify email ownership.': 26,
   'Registration Settings': 27,
   'Choose which email domains may register new accounts. Existing accounts are unaffected.': 28,
+
+  // init/primaryUrlTask.ts
+  'Choose the URL Papra puts in the links it sends': 29,
+
+  // actions/toggleRegistration.ts
+  'No one new can sign up until registration is enabled again. Existing accounts are unaffected.': 30,
 } as const
 
 /**

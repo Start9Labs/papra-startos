@@ -15,7 +15,7 @@
 1. Open the **Web UI** interface from the **Dashboard** tab.
 2. Create your account. The first account you register becomes the administrator.
 3. Once your account exists, run the **Disable Registration** action (StartOS will already be prompting you with a task) so no one else can sign up on your server.
-4. If you reach Papra over Tor or a custom domain, run **Set Primary URL** and pick the address you use most. Papra uses it to build the links in emails, invitations, and OAuth redirects.
+4. StartOS also prompts you with a task to run **Set Primary URL**. Pick the address you use most, such as your custom domain if you have one. Papra uses it to build the links in emails, invitations, and OAuth redirects.
 
 ## Using Papra
 
@@ -25,7 +25,7 @@ The Web UI is both the application and its API. On first launch you'll see a sig
 
 ### Actions
 
-- **Set Primary URL** — choose which of your Papra addresses is treated as primary for links in emails, invitations, and OAuth redirects.
+- **Set Primary URL** — choose which of your Papra addresses is treated as primary for links in emails, invitations, and OAuth redirects, and which one **Open UI** opens. If the chosen address stops being available, Papra uses a public domain if available (HTTPS preferred), otherwise its `.local` address or another available address, until it returns, and a task asks you to choose again.
 - **Enable / Disable Registration** — control whether new users can sign up. Disable it after creating your account; re-enable it briefly whenever you need to add someone.
 - **Registration Settings** — restrict new accounts to specific email domains. Add one domain per entry, such as `example.com`; matching ignores case but does not include subdomains. Leave the list empty to remove the restriction. Papra's forbidden domains still take precedence. This does not enable registration or verify email ownership, and existing accounts are unaffected.
 - **Configure SMTP** — add email credentials (your StartOS system SMTP, a provider preset, or a custom server) so Papra can send password-reset, email-verification, and invitation messages. Until you do this, those emails are only written to the service logs.

@@ -1,7 +1,7 @@
 import { FileHelper, smtpShape, z } from '@start9labs/start-sdk'
 import { sdk } from '../sdk'
 
-const shape = z.object({
+const shape = z.looseObject({
   primaryUrl: z.string().optional().catch(undefined),
   // Seeded true at install (seedFiles) so the first account can be made, but the
   // catch default is false: a corrupt or missing value must fail closed rather

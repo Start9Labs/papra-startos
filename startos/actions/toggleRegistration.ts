@@ -22,7 +22,9 @@ export const toggleRegistration = sdk.Action.withoutInput(
             'Registration is currently disabled. Run this action to allow new users to sign up.',
           ),
       warning: enabled
-        ? null
+        ? i18n(
+            'No one new can sign up until registration is enabled again. Existing accounts are unaffected.',
+          )
         : i18n(
             'While registration is enabled, anyone who can reach your Papra URL can create an account. Enable it only long enough to create the accounts you need, then disable it again.',
           ),

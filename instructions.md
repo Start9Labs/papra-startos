@@ -25,7 +25,7 @@ The Web UI is both the application and its API. On first launch you'll see a sig
 
 ### Actions
 
-- **Set Primary URL** — choose which of your Papra addresses is treated as primary for links in emails, invitations, and OAuth redirects, and which one **Open UI** opens. If the chosen address stops being available, Papra uses its `.local` address until it returns, and a task asks you to choose again.
+- **Set Primary URL** — choose which of your Papra addresses is treated as primary for links in emails, invitations, and OAuth redirects, and which one **Open UI** opens. If the chosen address stops being available, Papra uses a public domain if available (HTTPS preferred), otherwise its `.local` address or another available address, until it returns, and a task asks you to choose again.
 - **Enable / Disable Registration** — control whether new users can sign up. Disable it after creating your account; re-enable it briefly whenever you need to add someone.
 - **Registration Settings** — restrict new accounts to specific email domains. Add one domain per entry, such as `example.com`; matching ignores case but does not include subdomains. Leave the list empty to remove the restriction. Papra's forbidden domains still take precedence. This does not enable registration or verify email ownership, and existing accounts are unaffected.
 - **Configure SMTP** — add email credentials (your StartOS system SMTP, a provider preset, or a custom server) so Papra can send password-reset, email-verification, and invitation messages. Until you do this, those emails are only written to the service logs.

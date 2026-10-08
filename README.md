@@ -81,13 +81,13 @@ Two models, both on the `main` volume, and **neither is read by Papra**. Papra i
 
 Hand edits survive — these are ordinary JSON models. Changes to the watched configuration restart the running daemon to rebuild its environment; a stopped service uses them on its next start.
 
-**`primaryUrl` is the user's choice and is never rewritten by init.** `APP_BASE_URL` follows it to that hostname's current port and scheme. While it is unset, or its hostname is not one of the Web UI interface's addresses, `APP_BASE_URL` is the `.local` address instead and the Set Primary URL task is raised; the choice is kept, and Papra returns to it when the address does.
+**`primaryUrl` is the user's choice and is never rewritten by init.** `APP_BASE_URL` follows it to that hostname's current port and scheme. While it is unset, or its hostname is not one of the Web UI interface's addresses, `APP_BASE_URL` uses the preferred available address instead (a public domain, HTTPS first; else `.local`; else the first available address) and the Set Primary URL task is raised; the choice is kept, and Papra returns to it when the address does.
 
 Two environment values are derived rather than stored:
 
 | Variable          | Built from                                                                             |
 | ----------------- | -------------------------------------------------------------------------------------- |
-| `APP_BASE_URL`    | `primaryUrl` if published, else the `.local` address, then any address, then localhost |
+| `APP_BASE_URL`    | `primaryUrl` at its hostname's current port and scheme, else a public domain (HTTPS first), then `.local`, then any address; with no available address, the stored URL or localhost |
 | `TRUSTED_ORIGINS` | **Every** address the interface publishes, plus the base URL                           |
 
 Papra pins its auth and CORS behaviour to `APP_BASE_URL`, which would reject the UI when reached at any other address. Trusting the full published set is what makes the same install work over LAN, over Tor, and on a custom domain at the same time.
@@ -110,7 +110,7 @@ The port is bound on the `ui-multi` MultiHost and is not masked. Adding or remov
 
 ## Installation and First-Run Flow
 
-Install generates the session secret, seeds the document defaults, uses the `.local` address as the base URL until you choose a primary URL (a task asks for one), and — importantly — **leaves registration open**. No credential is shown, because Papra has no bootstrap admin: the account you create in the web UI is yours.
+Install generates the session secret, seeds the document defaults, uses the preferred available address as the base URL until you choose a primary URL (a task asks for one), and — importantly — **leaves registration open**. No credential is shown, because Papra has no bootstrap admin: the account you create in the web UI is yours.
 
 That open window is the point of the task raised at install. Create your account, then run Disable Registration. Until you do, **anyone who can reach a published address can sign up.**
 
@@ -122,7 +122,7 @@ Configuration actions update the environment used to launch Papra. Changes resta
 
 ### Set Primary URL
 
-Chooses which published address Papra treats as primary. Built by `sdk.setupPrimaryUrl`; the select pre-selects the `.local` address.
+Chooses which published address Papra treats as primary. Built by `sdk.setupPrimaryUrl`; the field defaults to a public domain (HTTPS first), else `.local`, else the first available address. An existing choice prefills the form.
 
 - **What it changes:** `primaryUrl` in `config.json`, and through it `APP_BASE_URL` and the address Open UI opens.
 - **Cost:** seconds; a changed value restarts the running daemon.
@@ -175,7 +175,7 @@ Two tasks, and one of them can come back.
 | Disable Registration | `important` | At install                                                                | The action runs                                       |
 | Set Primary URL      | `important` | While no primary URL is chosen, or the chosen one is not a Web UI address | A Web UI address is chosen, or the chosen one returns |
 
-Both are `important` rather than `critical` because the service is fully functional with them outstanding — the risk is that registration stays open, or that links point at the `.local` address, not that anything is broken.
+Both are `important` rather than `critical` because the service is fully functional with them outstanding — the risk is that registration stays open, or that links point at an address the user has not chosen, not that anything is broken.
 
 ## Health Checks
 
@@ -195,14 +195,14 @@ The `main` volume is copied wholesale — `sdk.Backups.ofVolumes('main')`. No du
 
 - **Included:** the SQLite database with every account, organisation, and document record; every uploaded document; the session secret; and both config files.
 - **Restore:** complete, and sessions survive because the secret does.
-- **Check the primary URL after a restore.** If the restored server does not publish the chosen address, Papra uses the `.local` one and raises the Set Primary URL task until that address returns or another is chosen.
+- **Check the primary URL after a restore.** If the restored server does not publish the chosen address, Papra uses the preferred available address and raises the Set Primary URL task until that address returns or another is chosen.
 
 ## Limitations and Differences
 
 1. **Registration is open at install** and stays open until you run the action. That is deliberate — there is no bootstrap admin — but it is the one window where the server is exposed.
 2. **No configuration file reaches Papra.** Every setting is passed as environment at daemon start; configuration changes restart the running daemon.
 3. **Without SMTP, emails are only logged.** Password resets and invitations silently go nowhere.
-4. **While the chosen primary URL is not published, Papra runs on the `.local` address** and a task asks for another choice.
+4. **While the chosen primary URL is not published, Papra uses the preferred available address** and a task asks for another choice.
 5. **Text extraction is CPU-heavy** and is the first thing to turn off on a small device.
 6. **The image runs as root**, which is what lets the package create its data directories on a fresh volume.
 7. **No riscv64 build.** x86_64 and aarch64 only.

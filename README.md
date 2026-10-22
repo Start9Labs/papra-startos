@@ -35,7 +35,7 @@
 
 ## Image and Container Runtime
 
-One upstream image, unmodified — the `-root` tag, which is what lets the package create its data directories before the app starts.
+One upstream image — the `-root` tag, which is what lets the package create its data directories before the app starts — built through the root `Dockerfile`, which installs Debian's CA store and sets `NODE_OPTIONS=--use-openssl-ca` so Node verifies against it. The layer is temporary and comes out once upstream ships an image whose Node no longer trusts the compromised eMudhra roots.
 
 | Property      | Value                    |
 | ------------- | ------------------------ |

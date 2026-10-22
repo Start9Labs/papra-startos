@@ -14,7 +14,9 @@ export const manifest = setupManifest({
   images: {
     main: {
       source: {
-        dockerTag: 'ghcr.io/papra-hq/papra:26.7.0-root',
+        dockerBuild: {
+          buildArgs: { IMAGE: 'ghcr.io/papra-hq/papra:26.7.0-root' },
+        },
       },
       arch: ['x86_64', 'aarch64'],
     },

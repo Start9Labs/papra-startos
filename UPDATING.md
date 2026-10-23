@@ -17,12 +17,12 @@ TOKEN=$(curl -s "https://ghcr.io/token?scope=repository:papra-hq/papra:pull" | j
 curl -s -H "Authorization: Bearer $TOKEN" "https://ghcr.io/v2/papra-hq/papra/tags/list" | jq -r '.tags[]' | grep -E '<version>'
 ```
 
-The current pin lives in `startos/manifest/index.ts` at `images.main.source.dockerTag` (the version before `-root` in `ghcr.io/papra-hq/papra:<version>-root`).
+The current pin lives in `startos/manifest/index.ts` at `images.main.source.dockerBuild.buildArgs.IMAGE` (the version before `-root` in `ghcr.io/papra-hq/papra:<version>-root`). The root `Dockerfile` supplies the temporary CA-store layer tracked in [#11](https://github.com/Start9Labs/papra-startos/issues/11); keep it until the replacement image meets that issue's system-store and runtime requirements.
 
 ## Applying the bump
 
-1. Bump `dockerTag` in `startos/manifest/index.ts` to `ghcr.io/papra-hq/papra:<new version>-root`.
+1. Bump the `IMAGE` build argument in `startos/manifest/index.ts` to `ghcr.io/papra-hq/papra:<new version>-root`.
 2. Keep the `-root` suffix — StartOS owns the data volume as root, and the rootless variant cannot write to it.
 3. Update `version` (`<new version>:0`) and `releaseNotes` in `startos/versions/current.ts`.
 4. Read the upstream release notes for new or renamed environment variables — Papra's runtime config is passed entirely through env vars in `startos/main.ts`. If a managed setting (auth, registration, SMTP, document handling) changed names or defaults, update `main.ts` and the relevant action/file model to match.
-5. Run `make` and confirm the build succeeds for both architectures.
+5. Run `helix-build -- make format` and `helix-build -- npx tsc --noEmit`. CI builds both architectures. Build locally only when the build itself changes, following the workspace's verification policy; a tag-only bump does not need a local build.

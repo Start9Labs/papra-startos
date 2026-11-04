@@ -23,6 +23,4 @@ The current pin lives in `startos/manifest/index.ts` at `images.main.source.dock
 
 1. Bump the `IMAGE` build argument in `startos/manifest/index.ts` to `ghcr.io/papra-hq/papra:<new version>-root`.
 2. Keep the `-root` suffix — StartOS owns the data volume as root, and the rootless variant cannot write to it.
-3. Update `version` (`<new version>:0`) and `releaseNotes` in `startos/versions/current.ts`.
-4. Read the upstream release notes for new or renamed environment variables — Papra's runtime config is passed entirely through env vars in `startos/main.ts`. If a managed setting (auth, registration, SMTP, document handling) changed names or defaults, update `main.ts` and the relevant action/file model to match.
-5. Run `make format` and `npx tsc --noEmit`. CI builds both architectures, so a tag-only bump needs no local `make`; build locally only when the build itself changes.
+3. Read the upstream release notes for new or renamed environment variables — Papra's runtime config is passed entirely through env vars in `startos/main.ts`. If a managed setting (auth, registration, SMTP, document handling) changed names or defaults, update `main.ts` and the relevant action/file model to match.
